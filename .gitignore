@@ -1,0 +1,49 @@
+# === Python-related ignores ===
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.pyd
+
+# === Virtual Environment ===
+.venv/
+venv/
+ENV/
+env/
+
+# === Environment Variable Files ===
+.env
+.env.*
+
+# === Streamlit-specific ===
+.streamlit/config.toml
+
+# === VS Code & Editor Folders ===
+.vscode/
+.idea/
+
+# === OS & Misc System Files ===
+.DS_Store
+Thumbs.db
+
+# === Logs & Caches ===
+*.log
+*.sqlite3
+.pytest_cache/
+coverage/
+.cache/
+
+# === Jupyter & Notebook Checkpoints (just in case) ===
+.ipynb_checkpoints/
+
+# === Lock Files (optional depending on your flow) ===
+poetry.lock
+Pipfile.lock
+
+# === Output, Artifacts or Generated Files (optional) ===
+*.csv
+*.tsv
+*.json
+*.xlsx
+*.pdf
+*.pkl
