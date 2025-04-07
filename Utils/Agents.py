@@ -2,9 +2,9 @@ from langchain_core.prompts import PromptTemplate
 from langchain_openai import ChatOpenAI
 
 class Agent:
-    def __init__(self, role=None, medical_report=None):
+    def __init__(self, medical_report, role):
         self.medical_report=medical_report
-        self.role=role,
+        self.role=role
         # self.extra_info=extra_info,
         self.prompt_template = self.create_prompt_template()
         self.model=ChatOpenAI(model="gpt-4o", temperature=0)
