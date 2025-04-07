@@ -5,7 +5,6 @@ class Agent:
     def __init__(self, medical_report, role):
         self.medical_report=medical_report
         self.role=role
-        # self.extra_info=extra_info,
         self.prompt_template = self.create_prompt_template()
         self.model=ChatOpenAI(model="gpt-4o", temperature=0)
 
@@ -107,6 +106,51 @@ class Agent:
                 - Clearly state whether the issue is likely pulmonary in nature or not.
 
                 Medical Report: {medical_report}
+            """,
+            
+            "Neurologist" : """
+                You are a highly experienced Neurologist.
+
+                Given the medical report of a patient below, analyze it only from a neurological perspective. Pay close attention to symptoms like dizziness, headaches, blackouts, coordination issues, or nerve-related complaints.
+
+                Identify:
+                1. Possible neurological conditions (e.g., migraines, epilepsy, vestibular disorders).
+                2. Relevant neurological tests to be done.
+                3. Treatment options including medicine, therapy, or scans.
+                4. Any non-medical advice like posture, sleep, stress control.
+
+                Report:
+                {medical_report}
+            """,
+            
+            "Endocrinologist":"""
+                You are a senior Endocrinologist.
+
+                Based on the patient's report below, focus on hormonal and metabolic health. Look for signs pointing to diabetes, thyroid issues, adrenal disorders, or hormonal imbalances.
+
+                Include:
+                1. Probable endocrine/metabolic issues.
+                2. Necessary diagnostic tests (e.g., HbA1c, TSH, cortisol).
+                3. Treatment paths (medications, hormone therapy, etc.).
+                4. Diet, activity, or lifestyle modifications.
+
+                Patient Report:
+                {medical_report}
+            """,
+            
+            "Gastroenterologist" : """
+                You are a skilled Gastroenterologist.
+
+                Examine the report provided below and assess it from a gastrointestinal health point of view. Pay attention to nausea, bloating, gut discomfort, GERD, or IBS-related symptoms.
+
+                Describe:
+                1. Gastrointestinal issues that may be present.
+                2. Investigations (e.g., endoscopy, stool tests).
+                3. Treatment or precautions.
+                4. Diet and food-related recommendations.
+
+                Case File:
+                {medical_report}
             """
         }
         templates = templates[self.role]
@@ -134,6 +178,42 @@ class Psychologist(Agent):
 class Pulmonologist(Agent):
     def __init__(self, medical_report):
         super().__init__(medical_report, "Pulmonologist")
+
+class Neurologist(Agent):
+    def __init__(self, medical_report):
+        super().__init__(medical_report, "Neurologist")
+
+class Endocrinologist(Agent):
+    def __init__(self, medical_report):
+        super().__init__(medical_report, "Endocrinologist")
+
+class Gastroenterologist(Agent):
+    def __init__(self, medical_report):
+        super().__init__(medical_report, "Gastroenterologist")
+
+class FinalSynthesizerAgent:
+    def __init__(self, reports_dict):  
+        self.reports_dict = reports_dict
+        self.model = ChatOpenAI(model="gpt-4o", temperature=0)
+        
+    def generate_final_report(self):
+        compiled_reports = "\n\n".join([f"{role} Report:\n{report}" for role, report in self.reports_dict.items()])
+        prompt = f"""You are a senior medical consultant. Based strictly on the following specialist reports:
+        
+        {compiled_reports}
+
+        Summarize:
+        1. All possible diseases or health issues identified (no assumptions).
+        2. Tests suggested by specialists.
+        3. Medical treatments recommended.
+        4. Food, exercise, yoga, or lifestyle advice.
+
+        ⚠️ Do NOT add any information outside of what's already provided in the reports.
+
+        Write this as a final summary report for the patient."""
+        return self.model.invoke(prompt).content
+
+
         
 
         
